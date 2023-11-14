@@ -8,6 +8,17 @@ import { ClientsComponent } from './clients/clients.component';
 import { LeadsGridComponent } from './leads/leads-listing/leads-grid/leads-grid.component';
 import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { authGuard } from './auth.guard';
+import { AdminGuard } from './admin.guard';
+import { superAdminGuard } from './super-admin.guard';
+import { AdminComponent } from './admin/admin.component';
+import { AdminManageComponent } from './admin-manage/admin-manage.component';
+import { EditContactComponent } from './contacts/edit-contact/edit-contact.component';
+import { DeleteContactComponent } from './contacts/delete-contact/delete-contact.component';
+import { AdminEditComponent } from './admin-edit/admin-edit.component';
+import { AdminDeleteComponent } from './admin-delete/admin-delete.component';
+import { adminAccessGuard } from './admin-access.guard';
+import { preferencesCheckGuard } from './preferences-check.guard';
 
 
 /* const routes: Routes=[
@@ -57,40 +68,67 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 } 
 ]; */
 
-const routes : Routes = [
+const routes: Routes = [
   {
-    path:'product/:id', component:ProductComponent
-  } ,
-  {
-    path:'product/:productId/photo/:photoId', component:ProductComponent
+    path: 'product/:id', component: ProductComponent
   },
   {
-    path:'clients', 
-    component : ClientsComponent
+    path: 'product/:productId/photo/:photoId', component: ProductComponent
   },
   {
-    path:'',
-    redirectTo:'leads',
-    pathMatch:'full'
-  },
- /*  {
-    path:'**',
-    component:PageNotFoundComponent
-  }, */
-  {
-    path:'leads',
-    component:LeadsGridComponent
+    path: 'clients',
+    component: ClientsComponent,
+    //canActivate:[authGuard]
+    canActivate: [AdminGuard, authGuard]
   },
   {
-    path:'search',
-    component:SearchComponent
+    path: '',
+    redirectTo: 'leads',
+    pathMatch: 'full'
   },
-  { path: 'payments', loadChildren: () => import('./payments/payments.module').then(m => m.PaymentsModule) },
+  /*  {
+     path:'**',
+     component:PageNotFoundComponent
+   }, */
   {
-    path:'**',
-    component:PageNotFoundComponent
+    path: 'leads',
+    component: LeadsGridComponent
+  },
+  {
+    path: 'admin',
+    //component: AdminComponent,   
+    canActivate: [superAdminGuard],
+    children: [
+      {
+        path: '',
+        component: AdminComponent,
+
+      },
+      {
+        path: '',
+        canActivateChild: [adminAccessGuard],
+        children: [
+          { path: 'manage', component: AdminManageComponent },
+          { path: 'edit', component: AdminEditComponent },
+          { path: 'delete', component: AdminDeleteComponent }
+        ]
+      }
+    ]
+  },
+  {
+    path: 'search',
+    component: SearchComponent
+  },
+  { path: 'payments', 
+  loadChildren: () => import('./payments/payments.module').then(m => m.PaymentsModule) },
+  { path: 'preferences', 
+    canLoad:[preferencesCheckGuard],
+    loadChildren: () => import('./preferences/preferences.module').then(m => m.PreferencesModule) },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
- 
+
 ];
 
 @NgModule({
@@ -99,6 +137,6 @@ const routes : Routes = [
     CommonModule,
     RouterModule.forRoot(routes)
   ],
-  exports:[RouterModule]
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }
