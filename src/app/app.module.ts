@@ -18,7 +18,9 @@ import { ProductComponent } from './product/product.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminEditComponent } from './admin-edit/admin-edit.component';
 import { AdminDeleteComponent } from './admin-delete/admin-delete.component';
-import { AdminManageComponent } from './admin-manage/admin-manage.component'
+import { AdminManageComponent } from './admin-manage/admin-manage.component';
+import { CustomersComponent } from './customers/customers.component';
+import { AddCustomerComponent } from './customers/add-customer/add-customer.component'
 @NgModule({
   declarations: [ 
     AppComponent,
@@ -34,7 +36,9 @@ import { AdminManageComponent } from './admin-manage/admin-manage.component'
     AdminComponent,
     AdminEditComponent,
     AdminDeleteComponent,
-    AdminManageComponent
+    AdminManageComponent,
+    CustomersComponent,
+    AddCustomerComponent
   ],
   imports: [
     FormsModule,
