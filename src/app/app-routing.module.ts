@@ -19,6 +19,8 @@ import { AdminEditComponent } from './admin-edit/admin-edit.component';
 import { AdminDeleteComponent } from './admin-delete/admin-delete.component';
 import { adminAccessGuard } from './admin-access.guard';
 import { preferencesCheckGuard } from './preferences-check.guard';
+import { unsavedGuard } from './unsaved.guard';
+import { accountInfoGuard } from './account-info.guard';
 
 
 /* const routes: Routes=[
@@ -91,8 +93,13 @@ const routes: Routes = [
      component:PageNotFoundComponent
    }, */
   {
+    // Resolve  data is loaded before route is activated
     path: 'leads',
-    component: LeadsGridComponent
+    component: LeadsGridComponent,
+    // error- [] 
+    resolve:{
+      data:accountInfoGuard
+    }
   },
   {
     path: 'admin',
@@ -117,7 +124,8 @@ const routes: Routes = [
   },
   {
     path: 'search',
-    component: SearchComponent
+    component: SearchComponent,
+    canDeactivate: [unsavedGuard]
   },
   { path: 'payments', 
   loadChildren: () => import('./payments/payments.module').then(m => m.PaymentsModule) },

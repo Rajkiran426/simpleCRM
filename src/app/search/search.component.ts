@@ -13,6 +13,10 @@ export class SearchComponent implements OnInit{
   priceFrom=0;
   size='M';
 
+  //  check if form is dirty fields
+
+    isDirty = true;
+
   constructor(private activatedRoute : ActivatedRoute){
     this.activatedRoute.queryParams.subscribe(params =>{
         this.color=params['color'];
